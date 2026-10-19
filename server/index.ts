@@ -159,7 +159,10 @@ async function main() {
       `\nTrickOrTrack: ${origin}\nOrganização: ${origin}/admin\n${demo ? "DEMONSTRAÇÃO: endereços fictícios e mapa ilustrativo.\n" : "Google Maps: configure as restrições das duas chaves no Google Cloud.\n"}`,
     ),
   );
+  let closing = false;
   const shutdown = () => {
+    if (closing) return;
+    closing = true;
     clearInterval(maintenance);
     if (timer) clearTimeout(timer);
     io.close();
@@ -169,6 +172,17 @@ async function main() {
       .then(() => db.close())
       .finally(() => process.exit(0));
   };
+  // O preparador usa IPC para encerrar o banco com segurança também no Windows.
+  process.on("message", (message) => {
+    if (
+      message &&
+      typeof message === "object" &&
+      "type" in message &&
+      message.type === "local:shutdown"
+    )
+      shutdown();
+  });
+  if (process.send) process.once("disconnect", shutdown);
   process.once("SIGTERM", shutdown);
   process.once("SIGINT", shutdown);
 }

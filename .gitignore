@@ -10,3 +10,6 @@ test-results/
 coverage/
 *.tsbuildinfo
 next-env.d.ts
+
+.local-runtime/
+.next-local-test/

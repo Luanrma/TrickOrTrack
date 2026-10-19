@@ -2,20 +2,62 @@
 
 Mapa do Halloween do bairro: encontre as casas participantes, veja onde ainda há doces e escolha um personagem para acompanhar sua localização.
 
-## Rodar localmente
+## Preparar e testar com um comando
 
-Requer Node.js 22.17+ (ou Node.js 24 LTS) e npm. Não precisa de Docker ou de instalar PostgreSQL para a demonstração.
+Depois de clonar ou extrair este repositório, execute:
+
+**Linux / Linux Mint / macOS**
+
+```bash
+bash iniciar-local.sh
+```
+
+**Windows**
+
+Dê dois cliques em **iniciar-local.cmd**, ou execute no terminal:
+
+```bat
+iniciar-local.cmd
+```
+
+O script verifica Node.js/npm e, se necessário, baixa Node.js **24 LTS** do site oficial, confere o SHA-256 e mantém o runtime em `.local-runtime`, somente neste projeto. Linux/macOS precisam de `tar`, `curl` ou `wget` e `sha256sum` ou `shasum`, utilitários normalmente disponíveis nesses sistemas. No Windows, usa o PowerShell já instalado. É necessária internet para preparar Node.js e instalar as dependências.
+
+Em seguida ele instala as dependências travadas em `package-lock.json`, cria credenciais, prepara o PostgreSQL incorporado com oito casas fictícias e inicia a aplicação. O navegador abre depois que a API confirma o funcionamento do banco. Mantenha o terminal aberto; **Ctrl+C** encerra o aplicativo.
+
+O terminal mostra **endereço do mapa, painel administrativo, e-mail e senha de teste**. A porta preferida é 3000; se estiver ocupada, o script procura uma porta livre até 20 posições adiante e mostra a URL correta.
+
+Não precisa instalar Docker ou PostgreSQL, configurar Google Maps, copiar arquivos `.env` ou usar `sudo`. O mapa de demonstração é ilustrativo e seus endereços são fictícios.
+
+### Repetir os testes
+
+Execute o mesmo script novamente. Credenciais e banco persistem entre execuções:
+
+- `.env.local-test`: e-mail, senha e porta preferida, criado uma única vez com permissão privada.
+- `.data/local-test`: banco dedicado à demonstração, com quatro casas com doces, duas sem doces e duas ainda não ativadas na primeira abertura.
+- `.next-local-test`: arquivos temporários do Next.js.
+
+O script mantém `.env.local` e bancos de outros ambientes intactos. Ele sempre inicia **a demonstração isolada**; não utiliza chaves Google nem `DATABASE_URL` do seu ambiente.
+
+Para preparar e verificar a API sem deixar o servidor aberto:
+
+```bash
+bash iniciar-local.sh --prepare-only
+```
+
+Use `--no-open` para manter o servidor no terminal sem abrir o navegador, ou `--help` para consultar as opções. No Windows, os mesmos argumentos podem ser passados para `iniciar-local.cmd`.
+
+### Execução manual e endereços reais
+
+Para desenvolvimento manual, requer Node.js 22.17+ ou 24+ e npm:
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Abra http://localhost:3000. A organização acessa http://localhost:3000/admin.
+Esse fluxo usa `.env.local`, criado por `setup` na primeira execução. O e-mail inicial é `admin@trickortrack.local`; a senha aleatória aparece no terminal e fica em `ADMIN_PASSWORD` nesse arquivo, ignorado pelo Git. O banco padrão da demonstração manual fica em `.data/pglite-demo`, separado do script automático.
 
-Na primeira execução, `setup` cria `.env.local`, gera uma senha aleatória e a mostra no terminal. O e-mail inicial é `admin@trickortrack.local`. Se precisar consultar a senha novamente, veja `ADMIN_PASSWORD` nesse arquivo local. Ele nunca deve ser commitado.
-
-O banco da demonstração persiste em `.data/pglite-demo`. Reiniciar mantém os cadastros e estados. A demonstração inclui oito casas fictícias (quatro com doces, duas sem doces, duas ainda não ativadas) e um mapa ilustrativo, sinalizado na tela.
+Se já houver Node.js compatível no computador, `npm run local` é um atalho para o mesmo preparador automático.
 
 ## Experimentar o fluxo
 
