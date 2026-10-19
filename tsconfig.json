@@ -32,7 +32,9 @@
     ".next-e2e/types/**/*.ts",
     ".next-e2e/dev/types/**/*.ts",
     ".next-load/types/**/*.ts",
-    ".next-load/dev/types/**/*.ts"
+    ".next-load/dev/types/**/*.ts",
+    ".next-local-test/types/**/*.ts",
+    ".next-local-test/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next-e2e"]
+  "exclude": ["node_modules", ".next-e2e", ".next-local-test"]
 }

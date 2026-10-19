@@ -11,7 +11,8 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
+      - run: bash -n iniciar-local.sh
+      - run: bash iniciar-local.sh --prepare-only
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
@@ -23,3 +24,21 @@ jobs:
           name: playwright-results
           path: test-results/
           retention-days: 3
+  local-launcher:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - if: runner.os == 'Windows'
+        shell: cmd
+        run: iniciar-local.cmd --prepare-only
+      - if: runner.os != 'Windows'
+        shell: bash
+        run: bash iniciar-local.sh --prepare-only

@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "test:load": "node --import tsx scripts/load-test.mts"
+    "test:load": "node --import tsx scripts/load-test.mts",
+    "local": "node scripts/local.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.10",
